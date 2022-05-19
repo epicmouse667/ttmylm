@@ -27,14 +27,7 @@ create table comment(
     foreign key(user_id) references user(id),
     foreign key (video_id) references video(id)
 );
--- ÊÓÆµ-ÆÀÂÛ
-create table video_comment(
-    video_id int,
-    comment_id int,
-    primary key(comment_id,video_id),
-    foreign key(video_id) references video(id),
-    foreign key(comment_id) references comment(id)
-);
+
 -- up-·ÛË¿
 create table user_follow(
     user_id int,
