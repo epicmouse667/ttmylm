@@ -1,6 +1,8 @@
 package service
 
-import "dou_sheng/mapper"
+import (
+	"dou_sheng/mapper"
+)
 
 var userList = map[string]int{}
 
