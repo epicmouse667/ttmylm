@@ -15,7 +15,10 @@ func GetFeedList(userID int) *[]pogo.Video {
 		log.Fatalln(err)
 		return nil
 	}
-	util.DbConn.Raw("select id, author_id,concat(url_pf,file_name) as play_url,concat(url_pf,cover_name) as cover_url,favorite_count,comment_count,title from video").Scan(&list)
+	util.DbConn.Raw("select id, author_id,concat(url_pf,file_name) as play_url,concat(url_pf,cover_name) as cover_url,favorite_count,comment_count,title " +
+		"from video " +
+		"order by create_time desc " +
+		"limit 30").Scan(&list)
 	for i := 0; i < len(list); i++ {
 		id := list[i].AuthorID
 		list[i].Author = GetUserByID(id)

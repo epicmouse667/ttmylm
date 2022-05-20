@@ -4,6 +4,7 @@ import (
 	"dou_sheng/mapper"
 	"dou_sheng/pogo"
 	"fmt"
+	"sync"
 )
 
 var feedMap = map[string]*[]pogo.Video{}
@@ -22,7 +23,10 @@ func GetFeedList(token string) *[]pogo.Video {
 		return list
 	} else {
 		list = mapper.GetFeedList(userList[token])
+		var lock sync.Mutex
+		lock.Lock()
 		feedMap[token] = list
+		lock.Unlock()
 	}
 	return list
 }
