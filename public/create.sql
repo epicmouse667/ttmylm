@@ -5,6 +5,8 @@ use dou_sheng;
 create table user(
     id int auto_increment primary key,
     name varchar(64),
+    hash varchar(128),
+    salt varchar(128),
     follow_count int,
     followed_count int
 );
