@@ -7,6 +7,7 @@ create table user(
     name varchar(64),
     hash varchar(128),
     salt varchar(128),
+    account varchar(64) unique ,
     follow_count int,
     followed_count int
 );
