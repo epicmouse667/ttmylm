@@ -3,25 +3,27 @@ package mapper
 import (
 	"dou_sheng/pogo"
 	"dou_sheng/util"
-	"fmt"
 )
 
-func GetUserList() []pogo.User {
-	var userList []pogo.User
-	err := util.DbConn.Raw("select id,name,follow_count,follower_count from user").Scan(&userList)
-	if err != nil {
-		fmt.Println("err in sql")
-		return []pogo.User{}
+func GetUserList(userList *map[string]int) {
+	raw, _ := util.DbConn.DB().Query("select concat(name,password),id from user")
+	var (
+		key   string
+		value int
+	)
+	for raw.Next() {
+		raw.Scan(&key, &value)
+		(*userList)[key] = value
 	}
-	fmt.Println("from db: ", userList)
-	return userList
+
 }
-func GetUserByID(idd int) pogo.User {
+func GetUserByID(id int) pogo.User {
 	var user pogo.User
-	util.DbConn.Raw("select id,name,follow_count,follower_count from user where id= ? ", idd).Scan(&user)
-	//if(err!=nil){
-	//	fmt.Println("ERR in querybyid")
-	//	return pogo.User{}
-	//}
+	util.DbConn.Raw("select id,name,follow_count,follower_count from user where id= ? ", id).Scan(&user)
 	return user
+}
+func GetUserRelation(followerID int, userID int) bool {
+	t := -1
+	util.DbConn.DB().QueryRow("select user_id from user_follow where user_id=? and subscribe_id=?", followerID, userID).Scan(&t)
+	return t != -1
 }

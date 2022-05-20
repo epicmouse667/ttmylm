@@ -7,6 +7,7 @@ type Video struct {
 	CoverUrl      string `json:"cover_url,omitempty"`
 	FavoriteCount int    `json:"favorite_count,omitempty"`
 	CommentCount  int    `json:"comment_count,omitempty"`
-	//IsFavorite    bool   `json:"is_favorite,omitempty"`
-	AuthorID int
+	IsFavorite    bool   `json:"is_favorite,omitempty"`
+	Title         string `json:"title,omitempty"`
+	AuthorID      int
 }

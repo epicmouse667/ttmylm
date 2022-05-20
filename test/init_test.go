@@ -1,6 +1,7 @@
 package test
 
 import (
+	"database/sql"
 	"dou_sheng/mapper"
 	"dou_sheng/pogo"
 	"dou_sheng/util"
@@ -11,18 +12,6 @@ import (
 	"testing"
 	"time"
 )
-
-func TestInit(t *testing.T) {
-	util.Init()
-	func() {
-		list := *mapper.GetFeedList()
-		for i := 0; i < len(list); i++ {
-			id := list[i].AuthorID
-			list[i].Author = mapper.GetUserByID(id)
-		}
-		fmt.Println(list)
-	}()
-}
 
 type FeedResponse struct {
 	pogo.Response
@@ -39,7 +28,7 @@ func TestRun(t *testing.T) {
 
 	// basic apis
 	apiRouter.GET("/feed/", func(c *gin.Context) {
-		list := *mapper.GetFeedList()
+		list := *mapper.GetFeedList(1)
 		for i := 0; i < len(list); i++ {
 			id := list[i].AuthorID
 			list[i].Author = mapper.GetUserByID(id)
@@ -53,4 +42,27 @@ func TestRun(t *testing.T) {
 	})
 
 	r.Run()
+}
+
+func TestDB(t *testing.T) {
+	util.Init()
+	stmt, err := util.DbConn.DB().Prepare("select * from user_favorate where user_id=? and video_id=?")
+	if err != nil {
+		fmt.Println("youwenti")
+	}
+	var res = false
+	err1 := stmt.QueryRow(3, 3).Scan(&res)
+	if err1 == sql.ErrNoRows {
+		fmt.Println("no result")
+	} else {
+		fmt.Println("has result")
+	}
+
+	//x:=stmt.QueryRow(5,2)
+	//if(x!=nil){
+	//	println("not null")
+	//} else {
+	//	println("null")
+	//}
+
 }
