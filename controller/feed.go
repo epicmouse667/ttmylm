@@ -17,7 +17,7 @@ type FeedResponse struct {
 
 func Feed(c *gin.Context) {
 	fmt.Println("feed.")
-	list := service.GetFeedList()
+	list := service.GetFeedList(c.Query("token"))
 	fmt.Println(list)
 	c.JSON(http.StatusOK, FeedResponse{
 		response:  pogo.Response{StatusCode: 0},
