@@ -8,15 +8,10 @@ import (
 	"net/http"
 )
 
-type VideoListResponse struct {
-	pogo.Response
-	VideoList []pogo.Video `json:"video_list"`
-}
+func PublishList(c *gin.Context) {
 
-func FavoriteList(c *gin.Context) {
-
-	var favoriteList = service.GetFavoriteList(c.Query("token"), c.Query("user_id"))
-	if favoriteList == nil {
+	var publishList = service.GetPublishList(c.Query("token"), c.Query("user_id"))
+	if publishList == nil {
 		c.JSON(http.StatusOK, VideoListResponse{
 			Response: pogo.Response{
 				StatusCode: 1,
@@ -25,11 +20,11 @@ func FavoriteList(c *gin.Context) {
 			VideoList: nil,
 		})
 	}
-	fmt.Println("favorite list: ", *favoriteList)
+	fmt.Println("puublish list: ", *publishList)
 	c.JSON(http.StatusOK, VideoListResponse{
 		Response: pogo.Response{
 			StatusCode: 0,
 		},
-		VideoList: *favoriteList,
+		VideoList: *publishList,
 	})
 }

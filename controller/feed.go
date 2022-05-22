@@ -21,7 +21,10 @@ func Feed(c *gin.Context) {
 	fmt.Println("feedList: ", list)
 	if list == nil {
 		c.JSON(http.StatusBadRequest, FeedResponse{
-			response:  pogo.Response{StatusCode: 1},
+			response: pogo.Response{
+				StatusCode: 1,
+				StatusMsg:  "cant' get the feed list",
+			},
 			VideoList: nil,
 			NextTime:  time.Now().Unix(),
 		})

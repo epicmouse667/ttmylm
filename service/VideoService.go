@@ -29,8 +29,13 @@ func GetFeedList(token string) *[]pogo.Video {
 	return list
 }
 
-func GetFavorateList(userID string, authorID string) *[]pogo.Video {
+func GetFavoriteList(userID string, authorID string) *[]pogo.Video {
 	userIDvar, _ := userList[userID]
 	authorIDvar, _ := strconv.Atoi(authorID)
 	return mapper.GetFavoriteList(userIDvar, authorIDvar)
+}
+func GetPublishList(userID string, authorID string) *[]pogo.Video {
+	userIDvar, _ := userList[userID]
+	authorIDvar, _ := strconv.Atoi(authorID)
+	return mapper.GetPublishList(userIDvar, authorIDvar)
 }
