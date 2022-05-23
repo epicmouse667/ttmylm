@@ -10,7 +10,7 @@ import (
 
 func GetFeedList(userID int) *[]pogo.Video {
 	var list []pogo.Video
-	stmt, err := util.DbConn.DB().Prepare("select user_id from user_favorate where user_id=? and video_id=?")
+	stmt, err := util.DbConn.DB().Prepare("select user_id from user_favorite where user_id=? and video_id=?")
 	if err != nil {
 		log.Fatalln(err)
 		return nil

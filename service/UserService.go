@@ -3,14 +3,13 @@ package service
 import (
 	mapper "dou_sheng/mapper"
 	"dou_sheng/pogo"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	//"sync/atomic"
 )
 
 var userList = map[string]int{} //用户列表
-
-var userIdSequence = int(0) //用户ID次序，目前为
 
 func GetUserList() {
 	mapper.GetUserList(&userList)
@@ -29,15 +28,11 @@ func Register(c *gin.Context) {
 			Response: pogo.Response{StatusCode: 1, StatusMsg: "User already exist"},
 		})
 	} else {
-		userIdSequence += 1
-		//newUser := pogo.User{
-		//	Id:   userIdSequence,
-		//	Name: username,
-		//}
-		userList[token] = userIdSequence
+		userList[token] = len(userList)
+		mapper.InsertUser(username, password)
 		c.JSON(http.StatusOK, pogo.UserLoginResponse{
 			Response: pogo.Response{StatusCode: 0, StatusMsg: "注册成功"},
-			UserId:   userIdSequence,
+			UserId:   len(userList),
 			Token:    username + password,
 		})
 	}
@@ -50,9 +45,13 @@ func Login(c *gin.Context) {
 	password := c.Query("password")
 
 	token := username + password
+	user := userList[token]
 
-	if user, exist := userList[token]; exist {
+	if mapper.SelectUser(username, password) {
+		fmt.Println(userList)
+		fmt.Println("succeed")
 		c.JSON(http.StatusOK, pogo.UserLoginResponse{
+
 			Response: pogo.Response{StatusCode: 0, StatusMsg: "成功登录"},
 			UserId:   user,
 			Token:    token,
