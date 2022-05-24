@@ -2,6 +2,7 @@ package main
 
 import (
 	"dou_sheng/controller"
+	"dou_sheng/service"
 	"dou_sheng/util"
 	"github.com/gin-gonic/gin"
 	"sync"
@@ -19,9 +20,9 @@ func initRouter(r *gin.Engine) {
 
 		// basic apis
 		apiRouter.GET("/feed/", controller.Feed)
-		//apiRouter.GET("/user/", controller.UserInfo)
-		//apiRouter.POST("/user/register/", controller.Register)
-		//apiRouter.POST("/user/login/", controller.Login)
+		apiRouter.GET("/user/", controller.UserInfo)
+		apiRouter.POST("/user/register/", controller.Register)
+		apiRouter.POST("/user/login/", controller.Login)
 		//apiRouter.POST("/publish/action/", controller.Publish)
 		apiRouter.GET("/publish/list/", controller.PublishList)
 		//
@@ -39,6 +40,7 @@ func initRouter(r *gin.Engine) {
 	go func() {
 		defer wg.Done()
 		util.Init()
+		service.GetUserList()
 	}()
 	wg.Wait()
 	// public directory is used to serve static resources

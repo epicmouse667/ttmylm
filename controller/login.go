@@ -6,19 +6,15 @@ import (
 	"net/http"
 )
 
-//用户注册
-
-func Register(c *gin.Context) {
+func Login(c *gin.Context) {
 	username := c.Query("username")
 	password := c.Query("password")
 
-	token := username + password
-
-	id, token := service.Register(username, password)
+	id, token := service.Login(username, password)
 
 	if id == -1 {
 		c.JSON(http.StatusOK, UserLoginResponse{
-			Response: Response{StatusCode: 1, StatusMsg: "User already exist"},
+			Response: Response{StatusCode: 1, StatusMsg: "User doesn't exist"},
 		})
 	}
 	c.JSON(http.StatusOK, UserLoginResponse{

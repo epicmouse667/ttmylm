@@ -19,10 +19,10 @@ func GetUserList(userList *map[string]int) {
 	}
 
 }
-func GetUserByID(id int) pogo.User {
+func GetUserByID(id int) *pogo.User {
 	var user pogo.User
 	util.DbConn.Raw("select id,name,follow_count,follower_count from user where id= ? ", id).Scan(&user)
-	return user
+	return &user
 }
 
 func GetUserRelation(followerID int, userID int) bool {
@@ -41,7 +41,7 @@ func LikeVideo(userID int, videoID int) bool {
 		return false
 	}
 	updateVideoFavoriteCount(true, videoID)
-	t.Commit()
+	//t.Commit()
 	util.DbConn.Unlock()
 	return true
 }
@@ -55,7 +55,33 @@ func DislikeVideo(userID int, videoID int) bool {
 		return false
 	}
 	updateVideoFavoriteCount(false, videoID)
-	t.Commit()
+	//t.Commit()
 	util.DbConn.Unlock()
 	return true
+}
+func AddUser(name string, password string) *pogo.User {
+	util.DbConn.Lock()
+	t := util.DbConn.Exec("insert into user(name, password, follow_count, follower_count) values (?,?,0,0)", name, password)
+	if t.Error != nil {
+		util.DbConn.Rollback()
+		util.DbConn.Unlock()
+		return nil
+	}
+	//util.DbConn.Commit()
+	util.DbConn.Unlock()
+	return Login(name, password)
+}
+
+func Login(name string, password string) *pogo.User {
+	var user pogo.User
+	t := util.DbConn.Raw("select * from user where name=? and password=?", name, password).Scan(&user)
+	if t.Error != nil {
+		return nil
+	}
+	return &user
+}
+func FindUserByName(name string) bool {
+	t := -1
+	util.DbConn.DB().QueryRow("select id from user where name=?", name).Scan(&t)
+	return t != -1
 }

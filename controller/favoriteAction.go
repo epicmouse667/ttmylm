@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"dou_sheng/pogo"
 	"dou_sheng/service"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -18,7 +17,7 @@ func FavoriteAction(c *gin.Context) {
 		fmt.Println("succeed")
 		c.JSON(
 			http.StatusOK,
-			pogo.Response{
+			Response{
 				StatusCode: 0,
 			},
 		)
@@ -26,7 +25,7 @@ func FavoriteAction(c *gin.Context) {
 		fmt.Println("failed")
 		c.JSON(
 			http.StatusBadRequest,
-			pogo.Response{
+			Response{
 				StatusCode: 1,
 				StatusMsg:  "err",
 			},

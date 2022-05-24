@@ -9,7 +9,7 @@ import (
 )
 
 type VideoListResponse struct {
-	pogo.Response
+	Response
 	VideoList []pogo.Video `json:"video_list"`
 }
 
@@ -18,7 +18,7 @@ func FavoriteList(c *gin.Context) {
 	var favoriteList = service.GetFavoriteList(c.Query("token"), c.Query("user_id"))
 	if favoriteList == nil {
 		c.JSON(http.StatusOK, VideoListResponse{
-			Response: pogo.Response{
+			Response: Response{
 				StatusCode: 1,
 				StatusMsg:  "can't get the favorite list",
 			},
@@ -27,7 +27,7 @@ func FavoriteList(c *gin.Context) {
 	}
 	fmt.Println("favorite list: ", *favoriteList)
 	c.JSON(http.StatusOK, VideoListResponse{
-		Response: pogo.Response{
+		Response: Response{
 			StatusCode: 0,
 		},
 		VideoList: *favoriteList,
