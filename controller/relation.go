@@ -5,6 +5,8 @@ import (
 	"net/http"
 )
 
+type UserListRequest struct {
+}
 type UserListResponse struct {
 	Response
 	UserList []User `json:"user_list"`
@@ -12,8 +14,11 @@ type UserListResponse struct {
 
 // RelationAction no practical effect, just check if token is valid
 func RelationAction(c *gin.Context) {
+	var userListRequest UserListRequest
+	if err := c.BindJSON(&userListRequest); err != nil {
+		c.JSON(http.StatusOK, Response{StatusCode: 0})
+	}
 	token := c.Query("token")
-
 	if _, exist := usersLoginInfo[token]; exist {
 		c.JSON(http.StatusOK, Response{StatusCode: 0})
 	} else {

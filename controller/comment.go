@@ -32,6 +32,7 @@ func CommentAction(c *gin.Context) {
 		c.JSON(http.StatusOK, paramsResponse)
 		return
 	}
+
 	token := c.Query("token")
 	actionType := c.Query("action_type")
 
