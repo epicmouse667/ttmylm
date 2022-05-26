@@ -9,5 +9,5 @@ type Video struct {
 	CommentCount  int    `json:"comment_count,omitempty"`
 	IsFavorite    bool   `json:"is_favorite,omitempty"`
 	Title         string `json:"title,omitempty"`
-	AuthorID      int
+	AuthorID      int    `json:"-"`
 }

@@ -3,7 +3,6 @@ package controller
 import (
 	"dou_sheng/pogo"
 	"dou_sheng/service"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -25,7 +24,7 @@ func FavoriteList(c *gin.Context) {
 			VideoList: nil,
 		})
 	}
-	fmt.Println("favorite list: ", *favoriteList)
+	//fmt.Println("favorite list: ", *favoriteList)
 	c.JSON(http.StatusOK, VideoListResponse{
 		Response: Response{
 			StatusCode: 0,

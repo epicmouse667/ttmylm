@@ -4,27 +4,39 @@ import (
 	"dou_sheng/mapper"
 	"dou_sheng/pogo"
 	"dou_sheng/util"
+	"fmt"
 	"strconv"
 )
 
-var feedMap = map[string]*[]pogo.Video{}
+var feedMap = map[string]int{}
 var favoriteMap = map[int]*[]pogo.Video{}
 
 func GetFeedList(token string) *[]pogo.Video {
 	if len(userList) == 0 {
 		GetUserList()
 	}
+	var list *[]pogo.Video
 	if token == "" {
 		token = "_default_user_"
 	}
-	list, ok := feedMap[token]
+	index, ok := feedMap[token]
 	if ok {
-		return list
-	} else {
-		list = mapper.GetFeedList(userList[token])
 		util.Lock.Lock()
-		feedMap[token] = list
+		list = mapper.GetFeedList(userList[token], index)
+		feedMap[token]++
 		util.Lock.Unlock()
+	} else {
+		util.Lock.Lock()
+		list = mapper.GetFeedList(userList[token], 0)
+		feedMap[token] = 1
+		util.Lock.Unlock()
+	}
+	if list != nil && len(*list) == 0 {
+		fmt.Println("service try again")
+		util.Lock.Lock()
+		feedMap[token] = 0
+		util.Lock.Unlock()
+		list = GetFeedList(token)
 	}
 	return list
 }

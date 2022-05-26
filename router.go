@@ -39,7 +39,7 @@ func initRouter(r *gin.Engine) {
 	}()
 	go func() {
 		defer wg.Done()
-		util.Init()
+		util.InitSQL()
 		service.GetUserList()
 	}()
 	wg.Wait()

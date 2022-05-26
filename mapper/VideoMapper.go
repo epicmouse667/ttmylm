@@ -1,8 +1,10 @@
 package mapper
 
 import (
+	"database/sql"
 	"dou_sheng/pogo"
 	"dou_sheng/util"
+	"fmt"
 )
 
 //填充用户列表
@@ -20,12 +22,16 @@ func fillListRelation(userID int, list *pogo.Video) {
 }
 
 // GetFeedList 针对当前用用户向用户推流
-func GetFeedList(userID int) *[]pogo.Video {
+func GetFeedList(userID int, page int) *[]pogo.Video {
 	var list []pogo.Video
-	util.DbConn.Raw("select id, author_id,concat(url_pf,file_name) as play_url,concat(url_pf,cover_name) as cover_url,favorite_count,comment_count,title " +
-		"from video " +
-		"order by create_time desc " +
-		"limit 30").Scan(&list)
+	t := util.DbConn.Raw("select id, author_id,concat(url_pf,file_name) as play_url,concat(url_pf,cover_name) as cover_url,favorite_count,comment_count,title "+
+		"from video "+
+		"order by create_time desc "+
+		"limit ?,30", page*30).Scan(&list)
+	if t.Error == sql.ErrNoRows {
+		fmt.Println("mapper no result")
+		return nil
+	}
 	for i := 0; i < len(list); i++ {
 		fillListUser(userID, &list[i])
 		fillListRelation(userID, &list[i])

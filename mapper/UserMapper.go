@@ -21,7 +21,9 @@ func GetUserList(userList *map[string]int) {
 }
 func GetUserByID(id int) *pogo.User {
 	var user pogo.User
-	util.DbConn.Raw("select id,name,follow_count,follower_count from user where id= ? ", id).Scan(&user)
+	util.DbConn.Raw("select user.id, name, follow_count, follower_count, concat(url_pf, avatar) as avatar, signature, concat(url_pf, background_image) as background_image "+
+		"from user left join user_info on user.id=user_info.id "+
+		"where user.id= ? ", id).Scan(&user)
 	return &user
 }
 

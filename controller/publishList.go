@@ -2,7 +2,6 @@ package controller
 
 import (
 	"dou_sheng/service"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -19,7 +18,7 @@ func PublishList(c *gin.Context) {
 			VideoList: nil,
 		})
 	}
-	fmt.Println("puublish list: ", *publishList)
+	//fmt.Println("puublish list: ", *publishList)
 	c.JSON(http.StatusOK, VideoListResponse{
 		Response: Response{
 			StatusCode: 0,
