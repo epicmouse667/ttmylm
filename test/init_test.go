@@ -46,7 +46,7 @@ func TestRun(t *testing.T) {
 
 func TestDB(t *testing.T) {
 	util.Init()
-	stmt, err := util.DbConn.DB().Prepare("select * from user_favorate where user_id=? and video_id=?")
+	stmt, err := util.DbConn.DB().Prepare("select * from user_favorite where user_id=? and video_id=?")
 	if err != nil {
 		fmt.Println("youwenti")
 	}
@@ -64,5 +64,8 @@ func TestDB(t *testing.T) {
 	//} else {
 	//	println("null")
 	//}
-
+}
+func TestDo(t *testing.T) {
+	util.Init()
+	fmt.Println(*mapper.GetFavoriteList(1, 1))
 }
