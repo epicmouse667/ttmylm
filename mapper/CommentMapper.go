@@ -56,7 +56,7 @@ func AddComment(user_id int, video_id int, comment_text string) *pogo.Comment {
 		comment
 		join user on comment.user_id=user.id
 	 where 
-		 content=`, comment_text)
+		 content=?`, comment_text)
 	for raw.Next() {
 		raw.Scan(&comment.Id, &comment.User.Id, &comment.Content,
 			comment.CreateDate, comment.User.Name,
@@ -64,5 +64,37 @@ func AddComment(user_id int, video_id int, comment_text string) *pogo.Comment {
 		comment.User.IsFollow = GetUserRelation(comment.User.Id,
 			GetAuthorIdByVideoId(video_id))
 	}
+	return &comment
+}
+
+func DeleteComment(user_id int, video_id int, comment_id int) *pogo.Comment {
+	util.DbConn.Lock()
+	var comment pogo.Comment
+	raw, _ := util.DbConn.DB().Query(
+		`select 
+		comment.id,user.id,content,create_date,name,follow_count,follower_count
+	from 
+		comment
+		join user on comment.user_id=user.id
+	 where 
+		 id=?`, comment_id)
+	for raw.Next() {
+		raw.Scan(&comment.Id, &comment.User.Id, &comment.Content,
+			comment.CreateDate, comment.User.Name,
+			comment.User.FollowCount, comment.User.FollowerCount)
+		comment.User.IsFollow = GetUserRelation(comment.User.Id,
+			GetAuthorIdByVideoId(video_id))
+	}
+	t := util.DbConn.Exec(
+		`delete from
+			comment
+		where
+			id=?
+		`, comment_id)
+	if t.Error != nil {
+		util.DbConn.Rollback()
+		util.DbConn.Unlock()
+	}
+	util.DbConn.Unlock()
 	return &comment
 }
