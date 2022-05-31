@@ -1,6 +1,6 @@
 package pogo
 
 type Response struct {
-	StatusCode int
-	StatusMsg  string
+	StatusCode int32  `json:"status_code"`
+	StatusMsg  string `json:"status_msg,omitempty"`
 }
