@@ -63,13 +63,17 @@ func UnFollowUser(user_id int, to_user_id int) *string {
 	return nil
 }
 
-func UpdateFollow(user_id int, to_user_id int) {
+func UpdateFollow(user_id int, to_user_id int, action_type int) {
 	util.DbConn.Lock()
+	//action_type==1 then follower+1 offset=1
+	//action_type==2 then follower-1 offset=-1
+	//offset=action_type*(-2)+3
+	offset := action_type*(-2) + 3
 	t := util.DbConn.Exec(
 		`update 
 			user 
 		set 
-			follow_count=follow_count+1 where id=?`, user_id)
+			follow_count=follow_count+? where id=?`, offset, user_id)
 	if t.Error != nil {
 		util.DbConn.Rollback()
 		util.DbConn.Unlock()
@@ -78,7 +82,7 @@ func UpdateFollow(user_id int, to_user_id int) {
 		`update 
 			user 
 		set 
-			follower_count=follower_count+1 where id=?`, to_user_id)
+			follower_count=follower_count+? where id=?`, offset, to_user_id)
 	if t.Error != nil {
 		util.DbConn.Rollback()
 		util.DbConn.Unlock()
