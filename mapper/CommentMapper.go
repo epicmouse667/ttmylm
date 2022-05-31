@@ -67,6 +67,7 @@ func AddComment(user_id int, video_id int, comment_text string) *pogo.Comment {
 	return &comment
 }
 
+//删除评论 此时action_type==2
 func DeleteComment(user_id int, video_id int, comment_id int) *pogo.Comment {
 	util.DbConn.Lock()
 	var comment pogo.Comment
