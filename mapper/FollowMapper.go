@@ -26,7 +26,11 @@ func GetFollowListByUserId(user_id int) *[]pogo.User {
 	return &followlist
 }
 
-func FollowUser(user_id int, to_user_id int) {
+func FollowUser(user_id int, to_user_id int) *string {
+	if GetUserRelation(user_id, to_user_id) {
+		err_msg := "Error:you have alreday followed this user"
+		return &err_msg
+	}
 	util.DbConn.Lock()
 	t := util.DbConn.Exec(
 		`insert into
@@ -37,9 +41,14 @@ func FollowUser(user_id int, to_user_id int) {
 		util.DbConn.Unlock()
 	}
 	util.DbConn.Unlock()
+	return nil
 }
 
-func UnFollowUser(user_id int, to_user_id int) {
+func UnFollowUser(user_id int, to_user_id int) *string {
+	if !GetUserRelation(user_id, to_user_id) {
+		err_msg := "Error:you haven't followed this user yet"
+		return &err_msg
+	}
 	util.DbConn.Lock()
 	t := util.DbConn.Exec(
 		`delete form
@@ -51,6 +60,7 @@ func UnFollowUser(user_id int, to_user_id int) {
 		util.DbConn.Unlock()
 	}
 	util.DbConn.Unlock()
+	return nil
 }
 
 func UpdateFollow(user_id int, to_user_id int) {
