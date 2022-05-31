@@ -34,7 +34,7 @@ func CommentAction(c *gin.Context) {
 				CommentActionResponse{
 					Response: Response{
 						StatusCode: 1,
-						StatusMsg:  "Failed to get comment list.",
+						StatusMsg:  "Failed to comment.",
 					}})
 		}
 	} else {
@@ -52,7 +52,7 @@ func CommentAction(c *gin.Context) {
 				CommentActionResponse{
 					Response: Response{
 						StatusCode: 1,
-						StatusMsg:  "Failed to get comment list.",
+						StatusMsg:  "Failed to delete comment.",
 					}})
 		}
 	}
