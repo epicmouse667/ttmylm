@@ -76,3 +76,16 @@ func updateVideoFavoriteCount(increase bool, id int) {
 		util.DbConn.Exec("update video set favorite_count=favorite_count-1 where id=?", id)
 	}
 }
+
+func GetAuthorIdByVideoId(video_id int) int {
+	var author_id int
+	util.DbConn.Raw(
+		`select
+			author_id
+		from
+			video
+		where
+			id=?
+		`, video_id).Scan(&author_id)
+	return author_id
+}

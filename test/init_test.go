@@ -6,11 +6,11 @@ import (
 	"dou_sheng/pogo"
 	"dou_sheng/util"
 	"fmt"
-	"github.com/gin-gonic/gin"
-	_ "github.com/go-sql-driver/mysql"
 	"net/http"
 	"testing"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 type FeedResponse struct {
