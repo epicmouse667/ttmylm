@@ -8,7 +8,7 @@ import (
 )
 
 //获得所有评论列表
-func GetCommentList(video_id int) []pogo.Comment {
+func GetCommentList(video_id int) *[]pogo.Comment {
 	//commentlist的容量上限为1000
 	commentlist := make([]pogo.Comment, 0, 1000)
 	//通过video_id获得该视频的所有评论
@@ -29,7 +29,7 @@ func GetCommentList(video_id int) []pogo.Comment {
 			GetAuthorIdByVideoId(video_id))
 		commentlist = append(commentlist, comment)
 	}
-	return commentlist
+	return &commentlist
 }
 
 //评论的操作 此时action_type==1
