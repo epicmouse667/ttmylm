@@ -21,17 +21,17 @@ type FeedResponse struct {
 
 func TestRun(t *testing.T) {
 	r := gin.Default()
-	util.Init()
+	util.InitSQL()
 	r.Static("/static", "./public")
 
 	apiRouter := r.Group("/douyin")
 
 	// basic apis
 	apiRouter.GET("/feed/", func(c *gin.Context) {
-		list := *mapper.GetFeedList(1)
+		list := *mapper.GetFeedList(1, 1)
 		for i := 0; i < len(list); i++ {
 			id := list[i].AuthorID
-			list[i].Author = mapper.GetUserByID(id)
+			list[i].Author = *mapper.GetUserByID(id)
 		}
 		fmt.Println(list)
 		c.JSON(http.StatusOK, FeedResponse{
@@ -45,7 +45,7 @@ func TestRun(t *testing.T) {
 }
 
 func TestDB(t *testing.T) {
-	util.Init()
+	util.InitSQL()
 	stmt, err := util.DbConn.DB().Prepare("select * from user_favorite where user_id=? and video_id=?")
 	if err != nil {
 		fmt.Println("youwenti")
@@ -66,6 +66,6 @@ func TestDB(t *testing.T) {
 	//}
 }
 func TestDo(t *testing.T) {
-	util.Init()
+	util.InitSQL()
 	fmt.Println(*mapper.GetFavoriteList(1, 1))
 }
