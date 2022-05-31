@@ -4,8 +4,9 @@ import (
 	"dou_sheng/controller"
 	"dou_sheng/service"
 	"dou_sheng/util"
-	"github.com/gin-gonic/gin"
 	"sync"
+
+	"github.com/gin-gonic/gin"
 )
 
 func initRouter(r *gin.Engine) {
@@ -29,8 +30,8 @@ func initRouter(r *gin.Engine) {
 		//// extra apis - I
 		apiRouter.POST("/favorite/action/", controller.FavoriteAction)
 		apiRouter.GET("/favorite/list/", controller.FavoriteList)
-		//apiRouter.POST("/comment/action/", controller.CommentAction)
-		//apiRouter.GET("/comment/list/", controller.CommentList)
+		apiRouter.POST("/comment/action/", controller.CommentAction)
+		apiRouter.GET("/comment/list/", controller.CommentList)
 		//
 		//// extra apis - II
 		//apiRouter.POST("/relation/action/", controller.RelationAction)
