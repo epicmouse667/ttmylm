@@ -1,6 +1,6 @@
 package pogo
 
-type Resposne struct {
+type Response struct {
 	StatusCode int
 	StatusMsg  string
 }
