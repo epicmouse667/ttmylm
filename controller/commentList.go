@@ -9,6 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+//extra_first 接口 4
 type CommentListResponse struct {
 	Response    Response
 	CommentList []pogo.Comment
