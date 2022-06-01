@@ -44,6 +44,7 @@ func AddComment(user_id int, video_id int, comment_text string) *pogo.Comment {
 	if t.Error != nil {
 		util.DbConn.Rollback()
 		util.DbConn.Unlock()
+		return nil
 	}
 	util.DbConn.Unlock()
 	//这边的返回信息需要comment_id(本身在表中是自增的)
@@ -59,8 +60,8 @@ func AddComment(user_id int, video_id int, comment_text string) *pogo.Comment {
 		 content=?`, comment_text)
 	for raw.Next() {
 		raw.Scan(&comment.Id, &comment.User.Id, &comment.Content,
-			comment.CreateDate, comment.User.Name,
-			comment.User.FollowCount, comment.User.FollowerCount)
+			&comment.CreateDate, &comment.User.Name,
+			&comment.User.FollowCount, &comment.User.FollowerCount)
 		comment.User.IsFollow = GetUserRelation(comment.User.Id,
 			GetAuthorIdByVideoId(video_id))
 	}
@@ -70,7 +71,7 @@ func AddComment(user_id int, video_id int, comment_text string) *pogo.Comment {
 //删除评论 此时action_type==2
 func DeleteComment(user_id int, video_id int, comment_id int) *pogo.Comment {
 	util.DbConn.Lock()
-	var comment pogo.Comment
+	comment := pogo.Comment{}
 	raw, _ := util.DbConn.DB().Query(
 		`select 
 		comment.id,user.id,content,create_date,name,follow_count,follower_count
@@ -78,11 +79,11 @@ func DeleteComment(user_id int, video_id int, comment_id int) *pogo.Comment {
 		comment
 		join user on comment.user_id=user.id
 	 where 
-		 id=?`, comment_id)
+		 comment.id=?`, comment_id)
 	for raw.Next() {
 		raw.Scan(&comment.Id, &comment.User.Id, &comment.Content,
-			comment.CreateDate, comment.User.Name,
-			comment.User.FollowCount, comment.User.FollowerCount)
+			&comment.CreateDate, &comment.User.Name,
+			&comment.User.FollowCount, &comment.User.FollowerCount)
 		comment.User.IsFollow = GetUserRelation(comment.User.Id,
 			GetAuthorIdByVideoId(video_id))
 	}

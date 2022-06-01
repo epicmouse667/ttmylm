@@ -9,24 +9,44 @@ import (
 func GetFollowListByUserId(user_id int) *[]pogo.User {
 	//followlist full capcity:1000
 	followlist := make([]pogo.User, 0, 1000)
-	rows, err := util.DbConn.Raw(`
-	select subsribe_id
-	from followlist
+	followrows, err := util.DbConn.Raw(`
+	select subscribe_id
+	from user_follow
 	where user_id=?
 	`, user_id).Rows()
 	if err != nil {
 		log.Fatal(err)
 	}
-	for rows.Next() {
-		var follower pogo.User
-		rows.Scan(&follower.Id, follower.Name, follower.FollowCount, follower.FollowerCount)
-		follower.IsFollow = true
-		followlist = append(followlist, follower)
+	for followrows.Next() {
+		var to_user_id int
+		followrows.Scan(&to_user_id)
+		userrows, err := util.DbConn.Raw(`
+		select 
+			id,name,follow_count,follower_count
+		from 
+			user
+		where 
+			id=?
+	`, to_user_id).Rows()
+		if err != nil {
+			log.Fatal(err)
+		}
+		for userrows.Next() {
+			var follower pogo.User
+			userrows.Scan(&follower.Id, &follower.Name, &follower.FollowCount, &follower.FollowerCount)
+			follower.IsFollow = true
+			followlist = append(followlist, follower)
+		}
+
 	}
 	return &followlist
 }
 
 func FollowUser(user_id int, to_user_id int) *string {
+	if user_id == to_user_id {
+		err_msg := "Error:user_id == to_user_id."
+		return &err_msg
+	}
 	if GetUserRelation(user_id, to_user_id) {
 		err_msg := "Error:you have alreday followed this user"
 		return &err_msg
@@ -45,13 +65,17 @@ func FollowUser(user_id int, to_user_id int) *string {
 }
 
 func UnFollowUser(user_id int, to_user_id int) *string {
+	if user_id == to_user_id {
+		err_msg := "Error:user_id == to_user_id."
+		return &err_msg
+	}
 	if !GetUserRelation(user_id, to_user_id) {
 		err_msg := "Error:you haven't followed this user yet"
 		return &err_msg
 	}
 	util.DbConn.Lock()
 	t := util.DbConn.Exec(
-		`delete form
+		`delete from
 			user_follow 
 		where
 			user_id=? AND subscribe_id=?`, user_id, to_user_id)

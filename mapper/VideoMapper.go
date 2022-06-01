@@ -78,7 +78,10 @@ func updateVideoFavoriteCount(increase bool, id int) {
 }
 
 func GetAuthorIdByVideoId(video_id int) int {
-	var author_id int
+	type Author struct {
+		author_id int
+	}
+	var author Author
 	util.DbConn.Raw(
 		`select
 			author_id
@@ -86,6 +89,6 @@ func GetAuthorIdByVideoId(video_id int) int {
 			video
 		where
 			id=?
-		`, video_id).Scan(&author_id)
-	return author_id
+		`, video_id).Scan(&author)
+	return author.author_id
 }
