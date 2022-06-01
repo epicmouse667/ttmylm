@@ -3,11 +3,13 @@ package service
 import (
 	"dou_sheng/mapper"
 	"dou_sheng/pogo"
+	"fmt"
 )
 
 func AddComment(user_id int, token string, video_id int, comment_text string) (*pogo.Comment, bool) {
 	_, ok := userList[token]
 	if !ok {
+		fmt.Println("wrong password or account")
 		return nil, false
 	} else {
 		return mapper.AddComment(user_id, video_id, comment_text), true

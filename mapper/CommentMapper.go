@@ -70,7 +70,6 @@ func AddComment(user_id int, video_id int, comment_text string) *pogo.Comment {
 
 //删除评论 此时action_type==2
 func DeleteComment(user_id int, video_id int, comment_id int) *pogo.Comment {
-	util.DbConn.Lock()
 	comment := pogo.Comment{}
 	raw, _ := util.DbConn.DB().Query(
 		`select 
@@ -87,6 +86,7 @@ func DeleteComment(user_id int, video_id int, comment_id int) *pogo.Comment {
 		comment.User.IsFollow = GetUserRelation(comment.User.Id,
 			GetAuthorIdByVideoId(video_id))
 	}
+	util.DbConn.Lock()
 	t := util.DbConn.Exec(
 		`delete from
 			comment

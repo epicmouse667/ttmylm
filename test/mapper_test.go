@@ -21,7 +21,7 @@ func TestAddComment(t *testing.T) {
 
 func TestDeleteComment(t *testing.T) {
 	util.InitSQL()
-	commentptr := mapper.DeleteComment(1, 1, 78012)
+	commentptr := mapper.DeleteComment(1, 1, 78022)
 	fmt.Println(*commentptr)
 }
 
