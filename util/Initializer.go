@@ -1,17 +1,21 @@
 package util
 
 import (
-	"github.com/jinzhu/gorm"
 	"log"
 	"os"
+
+	"github.com/jinzhu/gorm"
+
+	_ "github.com/go-sql-driver/mysql"
 )
-import _ "github.com/go-sql-driver/mysql"
 
 var DbConn *gorm.DB
 
 const (
-	DBConfig  = "root:a@tcp(127.0.0.1:3306)/dou_sheng?charset=utf8mb4&parseTime=true"
-	SourceWeb = "http://192.168.199.211:8081"
+
+	//DBConfig = "root:a@tcp(127.0.0.1:3306)/dou_sheng?charset=utf8mb4&parseTime=true"
+	DBConfig  = "ds:1234@tcp(139.224.105.6:3306)/dou_sheng?charset=utf8mb4&parseTime=true"
+	SourceWeb = "http://192.168.199.183:8081"
 )
 
 func Init() {

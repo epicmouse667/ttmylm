@@ -40,7 +40,7 @@ create table user_follow(
     foreign key (subscribe_id) references user(id)
 );
 -- 用户-视频点赞
-create table user_favorate(
+create table user_favorite(
     user_id int,
     video_id int,
     primary key (user_id,video_id),
